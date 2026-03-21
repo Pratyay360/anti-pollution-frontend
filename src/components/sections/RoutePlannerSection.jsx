@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { MapPin, Flag, ArrowRight, Wind, TrendingUp, VolumeX, LocateFixed, CheckCircle2, X } from 'lucide-react'
+import { MapPin, Flag, ArrowRight, Wind, TrendingUp, VolumeX, LocateFixed, CheckCircle2, X, AlertCircle } from 'lucide-react'
+import { fetchRoutesData } from '../../api/routeApi'
+import { geocodeAddress } from '../../api/geocodeApi'
+import MapModal from '../MapView/MapModal'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -28,6 +31,12 @@ export default function RoutePlannerSection() {
   const [result,        setResult]          = useState(null)   // null | 'success'
   const [activeFilters, setActiveFilters]   = useState(['air', 'elevation', 'quiet'])
   const [locating,      setLocating]        = useState(false)
+  const [error,         setError]           = useState(null)
+  const [routes,        setRoutes]          = useState(null)
+  const [mapCoords,     setMapCoords]       = useState(null)   // { lat, lng }
+  const [showMap,       setShowMap]         = useState(false)
+  // Store raw geolocation coords when user clicks "Locate"
+  const geoCoords = useRef(null)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -88,7 +97,8 @@ export default function RoutePlannerSection() {
     if (!navigator.geolocation) return
     setLocating(true)
     navigator.geolocation.getCurrentPosition(
-      () => {
+      (pos) => {
+        geoCoords.current = { lat: pos.coords.latitude, lng: pos.coords.longitude }
         setStartingPoint('My current location')
         setLocating(false)
       },
@@ -100,20 +110,52 @@ export default function RoutePlannerSection() {
     )
   }
 
-  const handleFindRoute = () => {
+  const handleFindRoute = async () => {
     if (!startingPoint || !destination) return
     setIsSearching(true)
     setResult(null)
-    setTimeout(() => {
-      setIsSearching(false)
+    setError(null)
+    setRoutes(null)
+    setMapCoords(null)
+
+    try {
+      // Resolve origin coords
+      let origin
+      if (geoCoords.current && startingPoint === 'My current location') {
+        origin = geoCoords.current
+      } else {
+        origin = await geocodeAddress(startingPoint)
+      }
+
+      // Resolve destination coords
+      const dest = await geocodeAddress(destination)
+
+      const data = await fetchRoutesData({
+        originLat: origin.lat,
+        originLng: origin.lng,
+        destLat: dest.lat,
+        destLng: dest.lng,
+      })
+
+      setRoutes(data)
+      setMapCoords(origin)
       setResult('success')
-    }, 1500)
+    } catch (err) {
+      console.error(err)
+      setError(err.message || 'Something went wrong. Please try again.')
+    } finally {
+      setIsSearching(false)
+    }
   }
 
   const handleReset = () => {
     setResult(null)
     setStartingPoint('')
     setDestination('')
+    setError(null)
+    setRoutes(null)
+    setMapCoords(null)
+    geoCoords.current = null
   }
 
   return (
@@ -162,6 +204,7 @@ export default function RoutePlannerSection() {
                 </button>
                 <button
                   className="flex-1 h-12 breathe-button flex items-center justify-center gap-2 text-sm font-semibold"
+                  onClick={() => setShowMap(true)}
                 >
                   <span>Open in map</span>
                   <ArrowRight className="w-4 h-4" />
@@ -261,6 +304,15 @@ export default function RoutePlannerSection() {
                 )}
               </button>
 
+              {/* Error message */}
+              {error && (
+                <div className="mt-3 flex items-start gap-2 px-4 py-3 rounded-2xl text-sm"
+                  style={{ background: 'rgba(239,68,68,0.08)', color: '#f87171' }}>
+                  <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
               {/* Filter pills */}
               <div ref={pillsRef} className="mt-5">
                 <p className="text-center text-xs text-breathe-text-secondary mb-3">Optimise for</p>
@@ -290,6 +342,16 @@ export default function RoutePlannerSection() {
           )}
         </div>
       </div>
+
+      {/* Map modal */}
+      {showMap && mapCoords && routes && (
+        <MapModal
+          routes={routes}
+          latitude={mapCoords.lat}
+          longitude={mapCoords.lng}
+          onClose={() => setShowMap(false)}
+        />
+      )}
     </section>
   )
 }
