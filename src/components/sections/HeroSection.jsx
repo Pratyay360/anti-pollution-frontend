@@ -176,13 +176,15 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll hint */}
-      <div
+      <button
         ref={scrollHintRef}
-        className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        onClick={() => document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' })}
+        className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group bg-transparent border-0 p-2"
+        aria-label="Scroll to route planner"
       >
-        <span className="text-sm text-breathe-text-secondary">Scroll to plan your route</span>
+        <span className="text-sm text-breathe-text-secondary group-hover:text-breathe-accent transition-colors duration-300">Scroll to plan your route</span>
         <ChevronDown className="w-5 h-5 text-breathe-accent animate-bounce" />
-      </div>
+      </button>
     </section>
   )
 }

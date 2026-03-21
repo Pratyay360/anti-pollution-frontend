@@ -18,7 +18,7 @@ export default function FloatingParticles() {
     }
 
     resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
+    window?.addEventListener('resize', resizeCanvas)
 
     // Initialize particles
     const particleCount = Math.min(25, Math.floor(window.innerWidth / 60))

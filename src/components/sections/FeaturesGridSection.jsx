@@ -149,8 +149,11 @@ export default function FeaturesGridSection() {
             Ready for calmer journeys?
           </h3>
           
-          <button className="breathe-button px-10 py-4 text-lg font-medium inline-flex items-center gap-3 group">
-            <span>Get the app</span>
+          <button
+            onClick={() => document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' })}
+            className="breathe-button px-10 py-4 text-lg font-medium inline-flex items-center gap-3 group"
+          >
+            <span>Start planning</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
           </button>
           

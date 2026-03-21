@@ -91,7 +91,7 @@ function App() {
             "Green corridors & parks",
             "Shorter exposure time"
           ]}
-          image="https://placehold.co/600x40"
+          image="https://placehold.co/600x400"
           imagePosition="right"
           zIndex={30}
         />

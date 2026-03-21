@@ -4,10 +4,24 @@ import { Menu, X, Moon, Sun, Wind } from 'lucide-react'
 export default function Navigation({ isDarkMode, setIsDarkMode }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
+      // Highlight active nav link based on scroll position
+      const sections = ['route-planner', 'cleaner-routes', 'footer']
+      for (const id of sections) {
+        const el = document.getElementById(id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= 120 && rect.bottom >= 120) {
+            setActiveSection(`#${id}`)
+            return
+          }
+        }
+      }
+      setActiveSection('')
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -62,9 +76,13 @@ export default function Navigation({ isDarkMode, setIsDarkMode }) {
                 <button
                   key={link.label}
                   onClick={() => scrollToSection(link.href)}
-                  className="text-breathe-text-secondary hover:text-breathe-accent transition-colors duration-300 text-sm font-medium"
+                  className="relative text-sm font-medium transition-colors duration-300 pb-0.5"
+                  style={{ color: activeSection === link.href ? 'var(--breathe-accent)' : 'var(--breathe-text-secondary)' }}
                 >
                   {link.label}
+                  {activeSection === link.href && (
+                    <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full breathe-gradient" />
+                  )}
                 </button>
               ))}
             </div>
@@ -85,8 +103,11 @@ export default function Navigation({ isDarkMode, setIsDarkMode }) {
               </button>
 
               {/* CTA Button - Desktop */}
-              <button className="hidden lg:block breathe-button px-6 py-2.5 text-sm font-medium">
-                Get the App
+              <button
+                onClick={() => document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' })}
+                className="hidden lg:block breathe-button px-6 py-2.5 text-sm font-medium"
+              >
+                Plan a route
               </button>
 
               {/* Mobile menu button */}
@@ -136,13 +157,17 @@ export default function Navigation({ isDarkMode, setIsDarkMode }) {
           ))}
           <button 
             className="mt-4 breathe-button px-8 py-3 text-lg font-medium"
+            onClick={() => {
+              document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' })
+              setIsMobileMenuOpen(false)
+            }}
             style={{ 
               opacity: isMobileMenuOpen ? 1 : 0,
               transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
               transition: `all 0.5s ease ${navLinks.length * 100}ms`
             }}
           >
-            Get the App
+            Plan a route
           </button>
         </div>
       </div>
