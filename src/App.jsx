@@ -7,7 +7,7 @@ import RoutePlannerSection from './components/sections/RoutePlannerSection'
 import FeatureSection from './components/sections/FeatureSection'
 import FeaturesGridSection from './components/sections/FeaturesGridSection'
 import FooterSection from './components/sections/FooterSection'
-import FloatingParticles from './components/FloatingParticles'
+import FloatingParticles from "./components/FloatingParticles.jsx"
 import './App.css'
 
 gsap.registerPlugin(ScrollTrigger)
