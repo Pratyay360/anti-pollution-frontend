@@ -11,7 +11,7 @@ export default function HeroSection() {
   const blobRef = useRef(null);
   const headlineRef = useRef(null);
   const subheadlineRef = useRef(null);
-  const scrollHintRef = useRef(null);
+  const scrollHintRef = useRef(null);                               
   const breathingCircleRef = useRef(null);
 
   useEffect(() => {

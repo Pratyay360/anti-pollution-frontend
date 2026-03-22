@@ -92,10 +92,10 @@ export default function GlobeSection({ className }) {
       // ── Globe ──────────────────────────────────────────────────────────────
       globe = new ThreeGlobe({ waitForGlobeReady: true, animateIn: true })
         .globeImageUrl(
-          "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          "/earth-blue-marble.webp"
         )
         .bumpImageUrl(
-          "//unpkg.com/three-globe/example/img/earth-topology.png"
+          "/earth-topology.webp"
         )
         .showAtmosphere(true)
         .atmosphereColor("#f0883e")
