@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 /**
  * Custom hook to get the user's current geolocation.
@@ -14,7 +14,7 @@ export function useGeolocation() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser');
+      setError("Geolocation is not supported by your browser");
       setLoading(false);
       return;
     }
@@ -30,7 +30,7 @@ export function useGeolocation() {
       (err) => {
         setError(err.message);
         setLoading(false);
-      }
+      },
     );
   }, []);
 

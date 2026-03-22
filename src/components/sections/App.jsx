@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useGeolocation } from './hooks/useGeolocation';
-import Header from './components/Header/Header';
-import MapView from './components/MapView/MapView';
-import { fetchRoutesData } from './api/routeApi';
-import mockPostData from './data/mockPostData.json';
-import './App.css';
+import { useState, useEffect } from "react";
+import { useGeolocation } from "./hooks/useGeolocation";
+import Header from "./components/Header/Header";
+import MapView from "./components/MapView/MapView";
+import { fetchRoutesData } from "./api/routeApi";
+import mockPostData from "./data/mockPostData.json";
+import "./App.css";
 
 function App() {
   const { latitude, longitude, loading: locationLoading, error: locationError } = useGeolocation();
@@ -20,7 +20,7 @@ function App() {
         // Using mockPostData for the POST request payload as requested
         const data = await fetchRoutesData(mockPostData);
         // Assuming API might return the array directly or inside a `routes` property or `data` property
-        const actualRoutes = Array.isArray(data) ? data : (data?.routes || data?.data || []);
+        const actualRoutes = Array.isArray(data) ? data : data?.routes || data?.data || [];
         console.log(actualRoutes);
         setRoutes(actualRoutes);
       } catch (err) {

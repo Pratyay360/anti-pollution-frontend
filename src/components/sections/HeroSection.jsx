@@ -11,7 +11,7 @@ export default function HeroSection() {
   const blobRef = useRef(null);
   const headlineRef = useRef(null);
   const subheadlineRef = useRef(null);
-  const scrollHintRef = useRef(null);                               
+  const scrollHintRef = useRef(null);
   const breathingCircleRef = useRef(null);
 
   useEffect(() => {
@@ -33,21 +33,9 @@ export default function HeroSection() {
       const entranceTl = gsap.timeline({ delay: 0.2 });
       entranceTl
         .to(blob, { scale: 1, opacity: 1, duration: 0.9, ease: "power2.out" })
-        .to(
-          headline,
-          { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" },
-          "-=0.5",
-        )
-        .to(
-          subheadline,
-          { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" },
-          "-=0.4",
-        )
-        .to(
-          scrollHint,
-          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-          "-=0.3",
-        );
+        .to(headline, { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }, "-=0.5")
+        .to(subheadline, { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }, "-=0.4")
+        .to(scrollHint, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
 
       const scrollTl = gsap.timeline({
         scrollTrigger: {
@@ -72,12 +60,7 @@ export default function HeroSection() {
           { y: "-10vh", opacity: 0.2, ease: "power2.in" },
           0.7,
         )
-        .fromTo(
-          scrollHint,
-          { opacity: 1 },
-          { opacity: 0, ease: "power2.in" },
-          0.7,
-        );
+        .fromTo(scrollHint, { opacity: 1 }, { opacity: 0, ease: "power2.in" }, 0.7);
 
       if (breathingCircle) {
         gsap.to(breathingCircle, {
@@ -105,11 +88,9 @@ export default function HeroSection() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(240,136,62,0.12) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(240,136,62,0.12) 1px, transparent 1px)",
           backgroundSize: "32px 32px",
-          maskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
         }}
       />
 
@@ -118,8 +99,7 @@ export default function HeroSection() {
         ref={breathingCircleRef}
         className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-275 max-h-255 rounded-full pointer-events-none"
         style={{
-          background:
-            "radial-gradient(circle, rgba(240,136,62,0.07) 0%, transparent 65%)",
+          background: "radial-gradient(circle, rgba(240,136,62,0.07) 0%, transparent 65%)",
           opacity: 0.3,
         }}
       />
@@ -135,24 +115,21 @@ export default function HeroSection() {
       <div
         className="absolute -left-[8vw] -top-[8vh] w-[28vw] h-[28vw] blob animate-float-slow"
         style={{
-          background:
-            "radial-gradient(circle, rgba(240,136,62,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(240,136,62,0.12) 0%, transparent 70%)",
           animationDelay: "0s",
         }}
       />
       <div
         className="absolute -right-[6vw] top-[18vh] w-[18vw] h-[18vw] blob animate-float"
         style={{
-          background:
-            "radial-gradient(circle, rgba(88,166,255,0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(88,166,255,0.10) 0%, transparent 70%)",
           animationDelay: "2s",
         }}
       />
       <div
         className="absolute left-[12vw] -bottom-[4vh] w-[22vw] h-[22vw] blob animate-float-slow"
         style={{
-          background:
-            "radial-gradient(circle, rgba(63,185,80,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(63,185,80,0.08) 0%, transparent 70%)",
           animationDelay: "4s",
         }}
       />
@@ -167,8 +144,7 @@ export default function HeroSection() {
             lineHeight: 1.1,
           }}
         >
-          Breathe Better,{" "}
-          <span style={{ color: "var(--breathe-accent)" }}>Live Better.</span>
+          Breathe Better, <span style={{ color: "var(--breathe-accent)" }}>Live Better.</span>
         </h1>
 
         <p
@@ -179,8 +155,8 @@ export default function HeroSection() {
             lineHeight: 1.65,
           }}
         >
-          A gentler way to get around — cleaner air, calmer streets, and
-          guidance built for sensitive lungs.
+          A gentler way to get around — cleaner air, calmer streets, and guidance built for
+          sensitive lungs.
         </p>
       </div>
 
@@ -188,9 +164,7 @@ export default function HeroSection() {
       <button
         ref={scrollHintRef}
         onClick={() =>
-          document
-            .querySelector("#route-planner")
-            ?.scrollIntoView({ behavior: "smooth" })
+          document.querySelector("#route-planner")?.scrollIntoView({ behavior: "smooth" })
         }
         className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group bg-transparent border-0 p-2"
         aria-label="Scroll to route planner"

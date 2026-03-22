@@ -1,129 +1,214 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { MapPin, Flag, ArrowRight } from 'lucide-react'
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  MapPin,
+  Flag,
+  ArrowRight,
+  Wind,
+  TrendingUp,
+  VolumeX,
+} from "lucide-react";
+import { fetchLatLongByAddr } from "../../api/getLatLong.js";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 const FEATURE_PILLS = [
-  { icon: Wind, label: 'Air quality', color: '#2DB4D7', bg: 'rgba(45,180,215,0.10)' },
-  { icon: TrendingUp, label: 'Elevation', color: '#5BA4CF', bg: 'rgba(91,164,207,0.10)' },
-  { icon: VolumeX, label: 'Quiet streets', color: '#7EE3FA', bg: 'rgba(126,227,250,0.10)' },
-]
+  {
+    icon: Wind,
+    label: "Air quality",
+    color: "#2DB4D7",
+    bg: "rgba(45,180,215,0.10)",
+  },
+  {
+    icon: TrendingUp,
+    label: "Elevation",
+    color: "#5BA4CF",
+    bg: "rgba(91,164,207,0.10)",
+  },
+  {
+    icon: VolumeX,
+    label: "Quiet streets",
+    color: "#7EE3FA",
+    bg: "rgba(126,227,250,0.10)",
+  },
+];
 
 export default function RoutePlannerSection() {
-  const navigate = useNavigate()
-  const sectionRef = useRef(null)
-  const cardRef = useRef(null)
-  const titleRef = useRef(null)
-  const inputARef = useRef(null)
-  const inputBRef = useRef(null)
-  const buttonRef = useRef(null)
-  const pillsRef = useRef(null)
-  const blob1Ref = useRef(null)
-  const blob2Ref = useRef(null)
+  const navigate = useNavigate();
+  const sectionRef = useRef(null);
+  const cardRef = useRef(null);
+  const titleRef = useRef(null);
+  const inputARef = useRef(null);
+  const inputBRef = useRef(null);
+  const buttonRef = useRef(null);
+  const pillsRef = useRef(null);
+  const helperRef = useRef(null);
+  const blob1Ref = useRef(null);
+  const blob2Ref = useRef(null);
 
-  const [startingPoint, setStartingPoint] = useState('')
-  const [destination, setDestination] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
+  const [startingPoint, setStartingPoint] = useState("");
+  const [destination, setDestination] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    const section = sectionRef.current
-    const card = cardRef.current
-    const title = titleRef.current
-    const inputA = inputARef.current
-    const inputB = inputBRef.current
-    const button = buttonRef.current
-    const pills = pillsRef.current
-    const helper = helperRef.current
-    const blob1 = blob1Ref.current
-    const blob2 = blob2Ref.current
+    const section = sectionRef.current;
+    const card = cardRef.current;
+    const title = titleRef.current;
+    const inputA = inputARef.current;
+    const inputB = inputBRef.current;
+    const button = buttonRef.current;
+    const pills = pillsRef.current;
+    const helper = helperRef.current;
+    const blob1 = blob1Ref.current;
+    const blob2 = blob2Ref.current;
 
-    if (!section || !card || !title || !inputA || !inputB || !button || !helper) return
+    if (
+      !section ||
+      !card ||
+      !title ||
+      !inputA ||
+      !inputB ||
+      !button ||
+      !pills ||
+      !helper ||
+      !blob1 ||
+      !blob2
+    )
+      return;
 
     const ctx = gsap.context(() => {
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: 'top top',
-          end: '+=130%',
+          start: "top top",
+          end: "+=130%",
           pin: true,
           scrub: 0.5,
-        }
-      })
+        },
+      });
 
       // ENTRANCE (0-30%)
       scrollTl
-        .fromTo(card, { y: '60vh', scale: 0.92, opacity: 0 }, { y: 0, scale: 1, opacity: 1, ease: 'none' }, 0)
-        .fromTo(title, { x: '-8vw', opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0.05)
-        .fromTo(inputA, { x: '-10vw', opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0.08)
-        .fromTo(inputB, { x: '10vw', opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0.10)
-        .fromTo(button, { y: '10vh', scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, ease: 'none' }, 0.12)
-        .fromTo(pills, { y: 16, opacity: 0 }, { y: 0, opacity: 1, ease: 'none' }, 0.15)
-        .fromTo([blob1, blob2], { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 0.35, ease: 'none' }, 0)
+        .fromTo(
+          card,
+          { y: "60vh", scale: 0.92, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, ease: "none" },
+          0,
+        )
+        .fromTo(
+          title,
+          { x: "-8vw", opacity: 0 },
+          { x: 0, opacity: 1, ease: "none" },
+          0.05,
+        )
+        .fromTo(
+          inputA,
+          { x: "-10vw", opacity: 0 },
+          { x: 0, opacity: 1, ease: "none" },
+          0.08,
+        )
+        .fromTo(
+          inputB,
+          { x: "10vw", opacity: 0 },
+          { x: 0, opacity: 1, ease: "none" },
+          0.1,
+        )
+        .fromTo(
+          button,
+          { y: "10vh", scale: 0.96, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, ease: "none" },
+          0.12,
+        )
+        .fromTo(
+          pills,
+          { y: 16, opacity: 0 },
+          { y: 0, opacity: 1, ease: "none" },
+          0.15,
+        )
+        .fromTo(
+          [blob1, blob2],
+          { scale: 0.8, opacity: 0 },
+          { scale: 1, opacity: 0.35, ease: "none" },
+          0,
+        );
 
       // EXIT
       scrollTl
-        .to(card, { y: '-55vh', scale: 0.96, opacity: 0.25, ease: 'power2.in' }, 0.7)
-        .to(title, { x: '-6vw', opacity: 0.2, ease: 'power2.in' }, 0.7)
-        .to(inputA, { x: '-8vw', opacity: 0.2, ease: 'power2.in' }, 0.7)
-        .to(inputB, { x: '8vw', opacity: 0.2, ease: 'power2.in' }, 0.7)
-        .to(button, { y: '-8vh', opacity: 0.2, ease: 'power2.in' }, 0.7)
-        .to(pills, { opacity: 0.2, ease: 'power2.in' }, 0.7)
-        .to([blob1, blob2], { scale: 1.1, opacity: 0, ease: 'power2.in' }, 0.7)
+        .to(
+          card,
+          { y: "-55vh", scale: 0.96, opacity: 0.25, ease: "power2.in" },
+          0.7,
+        )
+        .to(title, { x: "-6vw", opacity: 0.2, ease: "power2.in" }, 0.7)
+        .to(inputA, { x: "-8vw", opacity: 0.2, ease: "power2.in" }, 0.7)
+        .to(inputB, { x: "8vw", opacity: 0.2, ease: "power2.in" }, 0.7)
+        .to(button, { y: "-8vh", opacity: 0.2, ease: "power2.in" }, 0.7)
+        .to(pills, { opacity: 0.2, ease: "power2.in" }, 0.7)
+        .to([blob1, blob2], { scale: 1.1, opacity: 0, ease: "power2.in" }, 0.7);
 
-      gsap.to(blob1, { y: '+=10', duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true })
-      gsap.to(blob2, { y: '-=10', duration: 4.5, ease: 'sine.inOut', repeat: -1, yoyo: true })
-    }, section)
+      gsap.to(blob1, {
+        y: "+=10",
+        duration: 4,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+      });
+      gsap.to(blob2, {
+        y: "-=10",
+        duration: 4.5,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+      });
+    }, section);
 
-    return () => ctx.revert()
-  }, [])
+    return () => ctx.revert();
+  }, []);
 
-  const handleFindRoute = () => {
-    if (!startingPoint || !destination) return
-    
-    setIsSearching(true)
+  const handleFindRoute = async () => {
+    if (!startingPoint || !destination) return;
+
+    setIsSearching(true);
 
     try {
-      const sourceRes = await fetchLatLongByAddr(startingPoint)
-      const destRes = await fetchLatLongByAddr(destination)
-      console.log(sourceRes, destRes)
+      const sourceRes = await fetchLatLongByAddr(startingPoint);
+      const destRes = await fetchLatLongByAddr(destination);
+      console.log(sourceRes, destRes);
 
-      const originLoc = sourceRes?.geocodingResults?.[0]?.geometry?.location
-      const destLoc = destRes?.geocodingResults?.[0]?.geometry?.location
+      const originLoc = sourceRes?.geocodingResults?.[0]?.geometry?.location;
+      const destLoc = destRes?.geocodingResults?.[0]?.geometry?.location;
 
       if (!originLoc || !destLoc) {
-        alert("Could not find coordinates for one or both locations. Please try more specific addresses.")
-        setIsSearching(false)
-        return
+        alert(
+          "Could not find coordinates for one or both locations. Please try more specific addresses.",
+        );
+        return;
       }
 
-      navigate('/map', {
+      navigate("/map", {
         state: {
           originLat: originLoc.lat,
           originLng: originLoc.lng,
           destLat: destLoc.lat,
-          destLng: destLoc.lng
-        }
-      })
+          destLng: destLoc.lng,
+        },
+      });
     } catch (err) {
-      console.error(err)
-      alert("Error fetching location data. Please try again.")
+      console.error(err);
+      alert("Error fetching location data. Please try again.");
     } finally {
-    
-    // Simulate route finding
-    setTimeout(() => {
-      setIsSearching(false)
-      alert(`Finding the safest route from "${startingPoint}" to "${destination}"...\n\nThis would connect to air quality data and routing APIs in the full app!`)
-    }, 1500)
-  }
+      setIsSearching(false);
+    }
+  };
 
   return (
     <section
       ref={sectionRef}
       id="route-planner"
       className="relative w-full h-screen flex items-center justify-center overflow-hidden z-20"
-      style={{ backgroundColor: 'var(--breathe-bg-primary)' }}
+      style={{ backgroundColor: "var(--breathe-bg-primary)" }}
     >
       {/* Decorative blobs */}
       <div
@@ -143,7 +228,7 @@ export default function RoutePlannerSection() {
         <h2
           ref={titleRef}
           className="font-heading font-bold text-breathe-text-primary mb-8"
-          style={{ fontSize: 'clamp(22px, 2.5vw, 32px)' }}
+          style={{ fontSize: "clamp(22px, 2.5vw, 32px)" }}
         >
           Plan a low-pollution route
         </h2>
@@ -208,5 +293,5 @@ export default function RoutePlannerSection() {
         </p>
       </div>
     </section>
-  )
+  );
 }

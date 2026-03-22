@@ -17,8 +17,7 @@ This implementation adds React Router v6 to enable navigation between a landing 
     - Add useEffect to sync dark mode with document.documentElement class
     - Initialize dark mode from prefers-color-scheme media query
     - _Requirements: 3.9_
-  
-  - [ ]* 2.2 Write property test for dark mode context
+  - [ ]\* 2.2 Write property test for dark mode context
     - **Property: Dark mode class consistency**
     - **Validates: Requirements 3.9**
 
@@ -30,8 +29,7 @@ This implementation adds React Router v6 to enable navigation between a landing 
     - Preserve all GSAP ScrollTrigger setup and refs
     - Maintain scroll snap behavior
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
-  
-  - [ ]* 3.2 Write unit tests for HomePage component
+  - [ ]\* 3.2 Write unit tests for HomePage component
     - Test that all section components render
     - Test GSAP ScrollTrigger initialization
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
@@ -48,8 +46,7 @@ This implementation adds React Router v6 to enable navigation between a landing 
     - Implement error state for API failures with retry button
     - Render MapView with latitude, longitude, and routes when data is ready
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8_
-  
-  - [ ]* 4.2 Write unit tests for MapPage loading and error states
+  - [ ]\* 4.2 Write unit tests for MapPage loading and error states
     - Test loading indicator when geolocation is loading
     - Test error message when geolocation fails
     - Test loading indicator when routes are loading
@@ -66,11 +63,10 @@ This implementation adds React Router v6 to enable navigation between a landing 
     - Import HomePage and MapPage components
     - Define route "/" for HomePage
     - Define route "/map" for MapPage
-    - Define catch-all route "*" that redirects to "/"
+    - Define catch-all route "\*" that redirects to "/"
     - Remove all landing page content and state management
     - _Requirements: 2.1, 2.2, 2.3_
-  
-  - [ ]* 6.2 Write property test for undefined route redirect
+  - [ ]\* 6.2 Write property test for undefined route redirect
     - **Property 1: Undefined Route Redirect**
     - **Validates: Requirements 2.3**
 
@@ -82,8 +78,7 @@ This implementation adds React Router v6 to enable navigation between a landing 
     - Wrap App with DarkModeProvider inside BrowserRouter
     - Preserve existing StrictMode and root rendering structure
     - _Requirements: 7.1, 7.2_
-  
-  - [ ]* 7.2 Write unit tests for main.jsx setup
+  - [ ]\* 7.2 Write unit tests for main.jsx setup
     - Test BrowserRouter wraps App
     - Test DarkModeProvider wraps App
     - _Requirements: 7.1_
@@ -98,8 +93,7 @@ This implementation adds React Router v6 to enable navigation between a landing 
     - Use Link component for "/" and "/map" routes
     - Use button with onClick for hash links (/#route-planner, /#cleaner-routes, /#footer)
     - _Requirements: 5.1, 5.2, 5.3_
-  
-  - [ ]* 8.2 Write unit tests for Navigation component
+  - [ ]\* 8.2 Write unit tests for Navigation component
     - Test Link components render for route paths
     - Test button components render for hash links
     - Test useDarkMode hook is used
@@ -108,11 +102,11 @@ This implementation adds React Router v6 to enable navigation between a landing 
 - [ ] 9. Checkpoint - Ensure routing is functional
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ]* 10. Write property test for MapView route display
+- [ ]\* 10. Write property test for MapView route display
   - **Property 2: All Routes Displayed on Map**
   - **Validates: Requirements 6.3**
 
-- [ ]* 11. Write integration tests for routing behavior
+- [ ]\* 11. Write integration tests for routing behavior
   - Test navigation from home to map page
   - Test navigation from map to home page
   - Test dark mode persists across route changes

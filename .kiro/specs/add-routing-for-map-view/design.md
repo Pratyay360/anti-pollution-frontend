@@ -5,6 +5,7 @@
 This design implements client-side routing using React Router v6 to enable navigation between a landing page and a map view. The current application has a single-page structure with GSAP animations and a separate MapView component. This design will restructure the application into a multi-route architecture while preserving all existing functionality, animations, and state management.
 
 The routing solution will:
+
 - Split the current App.jsx into HomePage and MapPage components
 - Configure React Router with BrowserRouter at the application entry point
 - Update Navigation component to use React Router Link components
@@ -74,10 +75,11 @@ Each route component will access dark mode state via `useDarkMode()` custom hook
 **Purpose**: Main routing component that defines application routes
 
 **Implementation**:
+
 ```jsx
-import { Routes, Route, Navigate } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import MapPage from './pages/MapPage'
+import { Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import MapPage from "./pages/MapPage";
 
 function App() {
   return (
@@ -86,10 +88,10 @@ function App() {
       <Route path="/map" element={<MapPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
 ```
 
 **Interface**: None (renders routes)
@@ -105,12 +107,14 @@ export default App
 **Props**: None (uses context for dark mode)
 
 **Implementation Strategy**:
+
 - Extract all content from current App.jsx
 - Preserve all GSAP ScrollTrigger setup
 - Use `useDarkMode()` hook for dark mode state
 - Maintain all existing refs and effects
 
 **Key Responsibilities**:
+
 - Initialize GSAP ScrollTrigger animations
 - Manage scroll snap behavior
 - Render all landing page sections
@@ -127,6 +131,7 @@ export default App
 **Props**: None
 
 **State**:
+
 ```typescript
 {
   routes: Array<Route> | null,
@@ -136,11 +141,13 @@ export default App
 ```
 
 **Hooks Used**:
+
 - `useGeolocation()` - Get user's current location
 - `useDarkMode()` - Access dark mode state
 - `useEffect()` - Fetch routes on mount
 
 **Implementation Flow**:
+
 1. Call `useGeolocation()` to get user coordinates
 2. If geolocation loading, show loading spinner
 3. If geolocation error, show error message
@@ -150,6 +157,7 @@ export default App
 7. When both available, render MapView with data
 
 **Loading States**:
+
 ```jsx
 if (loading) {
   return (
@@ -157,11 +165,12 @@ if (loading) {
       <div className="spinner" />
       <p>Getting your location...</p>
     </div>
-  )
+  );
 }
 ```
 
 **Error States**:
+
 ```jsx
 if (error) {
   return (
@@ -169,7 +178,7 @@ if (error) {
       <p>Error: {error}</p>
       <button onClick={() => window.location.reload()}>Retry</button>
     </div>
-  )
+  );
 }
 ```
 
@@ -177,51 +186,52 @@ if (error) {
 
 ### 4. Navigation Component Updates
 
-**File**: `src/components/sections/Navigation.jsx`
+**File**: `src/components/sections/Navigation`
 
 **Changes Required**:
+
 - Import `Link` from `react-router-dom`
 - Replace anchor tags with Link components for route navigation
 - Update `navLinks` array to include map route
 - Use `useDarkMode()` hook instead of props
 
 **Updated navLinks**:
+
 ```javascript
 const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Map', href: '/map' },
-  { label: 'How it works', href: '/#route-planner' },
-  { label: 'Features', href: '/#cleaner-routes' },
-  { label: 'Support', href: '/#footer' },
-]
+  { label: "Home", href: "/" },
+  { label: "Map", href: "/map" },
+  { label: "How it works", href: "/#route-planner" },
+  { label: "Features", href: "/#cleaner-routes" },
+  { label: "Support", href: "/#footer" },
+];
 ```
 
 **Link Implementation**:
+
 ```jsx
-{navLinks.map((link) => {
-  if (link.href.startsWith('/#')) {
-    // Hash link for same-page navigation
+{
+  navLinks.map((link) => {
+    if (link.href.startsWith("/#")) {
+      // Hash link for same-page navigation
+      return (
+        <button
+          key={link.label}
+          onClick={() => scrollToSection(link.href.substring(1))}
+          className="nav-link"
+        >
+          {link.label}
+        </button>
+      );
+    }
+    // Route link for navigation
     return (
-      <button
-        key={link.label}
-        onClick={() => scrollToSection(link.href.substring(1))}
-        className="nav-link"
-      >
+      <Link key={link.label} to={link.href} className="nav-link">
         {link.label}
-      </button>
-    )
-  }
-  // Route link for navigation
-  return (
-    <Link
-      key={link.label}
-      to={link.href}
-      className="nav-link"
-    >
-      {link.label}
-    </Link>
-  )
-})}
+      </Link>
+    );
+  });
+}
 ```
 
 ---
@@ -233,48 +243,50 @@ const navLinks = [
 **Purpose**: Provide dark mode state to all components
 
 **Implementation**:
-```jsx
-import { createContext, useContext, useState, useEffect } from 'react'
 
-const DarkModeContext = createContext(null)
+```jsx
+import { createContext, useContext, useState, useEffect } from "react";
+
+const DarkModeContext = createContext(null);
 
 export function DarkModeProvider({ children }) {
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setIsDarkMode(prefersDark)
-  }, [])
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add('dark')
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.remove("dark");
     }
-  }, [isDarkMode])
+  }, [isDarkMode]);
 
   return (
     <DarkModeContext.Provider value={{ isDarkMode, setIsDarkMode }}>
       {children}
     </DarkModeContext.Provider>
-  )
+  );
 }
 
 export function useDarkMode() {
-  const context = useContext(DarkModeContext)
+  const context = useContext(DarkModeContext);
   if (!context) {
-    throw new Error('useDarkMode must be used within DarkModeProvider')
+    throw new Error("useDarkMode must be used within DarkModeProvider");
   }
-  return context
+  return context;
 }
 ```
 
 **Interface**:
+
 ```typescript
 interface DarkModeContextValue {
-  isDarkMode: boolean
-  setIsDarkMode: (value: boolean) => void
+  isDarkMode: boolean;
+  setIsDarkMode: (value: boolean) => void;
 }
 ```
 
@@ -285,15 +297,16 @@ interface DarkModeContextValue {
 **File**: `src/main.jsx`
 
 **Changes**:
-```jsx
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { DarkModeProvider } from './contexts/DarkModeContext'
-import App from './App.jsx'
-import './index.css'
 
-createRoot(document.getElementById('root')).render(
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { DarkModeProvider } from "./contexts/DarkModeContext";
+import App from "./App.jsx";
+import "./index.css";
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <DarkModeProvider>
@@ -301,7 +314,7 @@ createRoot(document.getElementById('root')).render(
       </DarkModeProvider>
     </BrowserRouter>
   </StrictMode>,
-)
+);
 ```
 
 ## Data Models
@@ -312,15 +325,15 @@ The route data returned from the API follows this structure:
 
 ```typescript
 interface Route {
-  routeId: string
-  polyline: Array<[number, number]>  // [longitude, latitude] pairs
-  distance?: number
-  duration?: number
-  score?: number
+  routeId: string;
+  polyline: Array<[number, number]>; // [longitude, latitude] pairs
+  distance?: number;
+  duration?: number;
+  score?: number;
 }
 
 interface RoutesResponse {
-  routes: Route[]
+  routes: Route[];
 }
 ```
 
@@ -330,10 +343,10 @@ The `useGeolocation` hook returns:
 
 ```typescript
 interface GeolocationState {
-  latitude: number | null
-  longitude: number | null
-  loading: boolean
-  error: string | null
+  latitude: number | null;
+  longitude: number | null;
+  loading: boolean;
+  error: string | null;
 }
 ```
 
@@ -341,8 +354,8 @@ interface GeolocationState {
 
 ```typescript
 interface NavLink {
-  label: string
-  href: string  // Either route path ("/map") or hash ("#section")
+  label: string;
+  href: string; // Either route path ("/map") or hash ("#section")
 }
 ```
 
@@ -350,25 +363,24 @@ interface NavLink {
 
 ```typescript
 interface DarkModeState {
-  isDarkMode: boolean
-  setIsDarkMode: (value: boolean) => void
+  isDarkMode: boolean;
+  setIsDarkMode: (value: boolean) => void;
 }
 ```
 
-
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Undefined Route Redirect
 
-*For any* URL path that is not explicitly defined in the router configuration (not "/" or "/map"), navigating to that path should redirect the user to the home page at "/".
+_For any_ URL path that is not explicitly defined in the router configuration (not "/" or "/map"), navigating to that path should redirect the user to the home page at "/".
 
 **Validates: Requirements 2.3**
 
 ### Property 2: All Routes Displayed on Map
 
-*For any* array of route objects passed to the MapView component, all routes in the array should be added as layers to the map instance.
+_For any_ array of route objects passed to the MapView component, all routes in the array should be added as layers to the map instance.
 
 **Validates: Requirements 6.3**
 
@@ -377,11 +389,13 @@ interface DarkModeState {
 The following acceptance criteria are best validated through specific example tests rather than property-based tests:
 
 **Router Configuration Examples**:
+
 - Route "/" renders HomePage component (Requirement 2.1)
 - Route "/map" renders MapPage component (Requirement 2.2)
 - BrowserRouter wraps App in main.jsx (Requirement 7.1)
 
 **HomePage Component Examples**:
+
 - Renders Navigation component (Requirement 3.1)
 - Renders HeroSection component (Requirement 3.2)
 - Renders RoutePlannerSection component (Requirement 3.3)
@@ -392,6 +406,7 @@ The following acceptance criteria are best validated through specific example te
 - Dark mode toggle adds/removes 'dark' class (Requirement 3.9)
 
 **MapPage Component Examples**:
+
 - Shows loading indicator when geolocation is loading (Requirement 4.2)
 - Shows error message when geolocation fails (Requirement 4.3)
 - Fetches routes with mockPostData payload (Requirement 4.4)
@@ -401,21 +416,25 @@ The following acceptance criteria are best validated through specific example te
 - Renders Header component (Requirement 4.8)
 
 **Navigation Component Examples**:
+
 - Includes link to "/" (Requirement 5.1)
 - Includes link to "/map" (Requirement 5.2)
 - Link clicks update URL without page reload (Requirement 5.3)
 
 **MapView Component Examples**:
+
 - Accepts latitude, longitude, and routes props (Requirement 6.1)
 - Initializes map centered on provided coordinates (Requirement 6.2)
 - First route is styled blue, others gray (Requirement 6.4)
 - Adds start and end markers from first route (Requirement 6.5)
 
 **Hook and API Examples**:
+
 - useGeolocation returns latitude, longitude, loading, error (Requirement 6.6)
 - fetchRoutesData sends POST to correct endpoint (Requirement 6.7)
 
 **Dependency Examples**:
+
 - react-router-dom is in package.json dependencies (Requirement 1.1)
 - react-router-dom version is 6 or higher (Requirement 1.2)
 
@@ -424,32 +443,34 @@ The following acceptance criteria are best validated through specific example te
 ### Geolocation Errors
 
 **Error Scenarios**:
+
 1. Browser doesn't support geolocation API
 2. User denies location permission
 3. Location acquisition timeout
 4. Position unavailable
 
 **Handling Strategy**:
+
 - The `useGeolocation` hook captures all errors in the error state
 - MapPage component displays user-friendly error messages
 - Provide "Retry" button to attempt geolocation again
 - Error messages should be specific to the failure reason
 
 **Error UI**:
+
 ```jsx
 <div className="error-container">
   <div className="error-icon">⚠️</div>
   <h2>Location Access Required</h2>
   <p>{error}</p>
-  <button onClick={() => window.location.reload()}>
-    Try Again
-  </button>
+  <button onClick={() => window.location.reload()}>Try Again</button>
 </div>
 ```
 
 ### API Errors
 
 **Error Scenarios**:
+
 1. Network connection failure
 2. API server not running (localhost:3300)
 3. API returns non-200 status code
@@ -457,26 +478,27 @@ The following acceptance criteria are best validated through specific example te
 5. Request timeout
 
 **Handling Strategy**:
+
 - Wrap API calls in try-catch blocks
 - Display specific error messages based on error type
 - Provide "Retry" button to attempt API call again
 - Log errors to console for debugging
 
 **Error UI**:
+
 ```jsx
 <div className="error-container">
   <div className="error-icon">🔌</div>
   <h2>Unable to Load Routes</h2>
   <p>The route service is currently unavailable. Please ensure the API server is running.</p>
-  <button onClick={retryFetchRoutes}>
-    Retry
-  </button>
+  <button onClick={retryFetchRoutes}>Retry</button>
 </div>
 ```
 
 ### Route Not Found
 
 **Handling Strategy**:
+
 - Use catch-all route (`path="*"`) in router configuration
 - Redirect to home page using `<Navigate to="/" replace />`
 - No error message needed (silent redirect)
@@ -484,6 +506,7 @@ The following acceptance criteria are best validated through specific example te
 ### Component Errors
 
 **Handling Strategy**:
+
 - MapView component handles missing props gracefully
 - Check for null/undefined before rendering map
 - GSAP animations wrapped in try-catch to prevent crashes
@@ -528,6 +551,7 @@ Unit tests will focus on specific examples, component rendering, and integration
 Property-based tests will verify universal behaviors across many generated inputs. We'll use `fast-check` library for JavaScript property-based testing.
 
 **Property Test Configuration**:
+
 - Minimum 100 iterations per test
 - Each test tagged with feature name and property reference
 - Use custom generators for route data and coordinates
@@ -535,40 +559,39 @@ Property-based tests will verify universal behaviors across many generated input
 **Property Tests**:
 
 1. **Undefined Route Redirect Property**
+
    ```javascript
    // Feature: add-routing-for-map-view, Property 1: Undefined Route Redirect
-   test('any undefined route redirects to home', () => {
+   test("any undefined route redirects to home", () => {
      fc.assert(
        fc.property(
-         fc.string().filter(s => s !== '/' && s !== '/map'),
+         fc.string().filter((s) => s !== "/" && s !== "/map"),
          (path) => {
            // Navigate to random undefined path
            // Verify redirect to "/"
-         }
+         },
        ),
-       { numRuns: 100 }
-     )
-   })
+       { numRuns: 100 },
+     );
+   });
    ```
 
 2. **All Routes Displayed Property**
    ```javascript
    // Feature: add-routing-for-map-view, Property 2: All Routes Displayed
-   test('all routes in array are added to map', () => {
+   test("all routes in array are added to map", () => {
      fc.assert(
-       fc.property(
-         fc.array(routeGenerator, { minLength: 1, maxLength: 10 }),
-         (routes) => {
-           // Render MapView with generated routes
-           // Verify all routes are added as map layers
-         }
-       ),
-       { numRuns: 100 }
-     )
-   })
+       fc.property(fc.array(routeGenerator, { minLength: 1, maxLength: 10 }), (routes) => {
+         // Render MapView with generated routes
+         // Verify all routes are added as map layers
+       }),
+       { numRuns: 100 },
+     );
+   });
    ```
 
 **Custom Generators**:
+
 ```javascript
 // Generator for route objects
 const routeGenerator = fc.record({
@@ -576,11 +599,11 @@ const routeGenerator = fc.record({
   polyline: fc.array(
     fc.tuple(
       fc.float({ min: -180, max: 180 }), // longitude
-      fc.float({ min: -90, max: 90 })    // latitude
+      fc.float({ min: -90, max: 90 }), // latitude
     ),
-    { minLength: 2, maxLength: 50 }
-  )
-})
+    { minLength: 2, maxLength: 50 },
+  ),
+});
 ```
 
 ### Testing Balance
@@ -707,6 +730,7 @@ src/
 ### Migration Steps
 
 1. **Install Dependencies**
+
    ```bash
    npm install react-router-dom
    npm install --save-dev fast-check  # for property-based testing

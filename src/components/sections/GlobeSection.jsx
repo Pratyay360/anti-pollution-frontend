@@ -8,38 +8,206 @@ const THEME_COLORS = ["#f0883e", "#38bdf8", "#4ade80"];
 // Major cities with known air quality challenges — arcs represent monitored corridors
 const ARC_DATA = [
   // South Asia
-  { startLat: 28.6139, startLng: 77.209,   endLat: 19.076,  endLng: 72.8777,  arcAlt: 0.15, color: THEME_COLORS[0] },
-  { startLat: 28.6139, startLng: 77.209,   endLat: 31.2304, endLng: 121.4737, arcAlt: 0.4,  color: THEME_COLORS[1] },
-  { startLat: 19.076,  startLng: 72.8777,  endLat: 1.3521,  endLng: 103.8198, arcAlt: 0.3,  color: THEME_COLORS[2] },
+  {
+    startLat: 28.6139,
+    startLng: 77.209,
+    endLat: 19.076,
+    endLng: 72.8777,
+    arcAlt: 0.15,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 28.6139,
+    startLng: 77.209,
+    endLat: 31.2304,
+    endLng: 121.4737,
+    arcAlt: 0.4,
+    color: THEME_COLORS[1],
+  },
+  {
+    startLat: 19.076,
+    startLng: 72.8777,
+    endLat: 1.3521,
+    endLng: 103.8198,
+    arcAlt: 0.3,
+    color: THEME_COLORS[2],
+  },
   // East Asia
-  { startLat: 31.2304, startLng: 121.4737, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.15, color: THEME_COLORS[0] },
-  { startLat: 35.6762, startLng: 139.6503, endLat: 37.5665, endLng: 126.978,  arcAlt: 0.1,  color: THEME_COLORS[2] },
-  { startLat: 39.9042, startLng: 116.4074, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.2,  color: THEME_COLORS[1] },
+  {
+    startLat: 31.2304,
+    startLng: 121.4737,
+    endLat: 35.6762,
+    endLng: 139.6503,
+    arcAlt: 0.15,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 35.6762,
+    startLng: 139.6503,
+    endLat: 37.5665,
+    endLng: 126.978,
+    arcAlt: 0.1,
+    color: THEME_COLORS[2],
+  },
+  {
+    startLat: 39.9042,
+    startLng: 116.4074,
+    endLat: 35.6762,
+    endLng: 139.6503,
+    arcAlt: 0.2,
+    color: THEME_COLORS[1],
+  },
   // Southeast Asia
-  { startLat: 1.3521,  startLng: 103.8198, endLat: 13.7563, endLng: 100.5018, arcAlt: 0.2,  color: THEME_COLORS[0] },
-  { startLat: 13.7563, startLng: 100.5018, endLat: 10.8231, endLng: 106.6297, arcAlt: 0.1,  color: THEME_COLORS[1] },
+  {
+    startLat: 1.3521,
+    startLng: 103.8198,
+    endLat: 13.7563,
+    endLng: 100.5018,
+    arcAlt: 0.2,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 13.7563,
+    startLng: 100.5018,
+    endLat: 10.8231,
+    endLng: 106.6297,
+    arcAlt: 0.1,
+    color: THEME_COLORS[1],
+  },
   // Europe
-  { startLat: 51.5072, startLng: -0.1276,  endLat: 48.8566, endLng: 2.3522,   arcAlt: 0.1,  color: THEME_COLORS[2] },
-  { startLat: 48.8566, startLng: 2.3522,   endLat: 52.52,   endLng: 13.405,   arcAlt: 0.1,  color: THEME_COLORS[0] },
-  { startLat: 52.52,   startLng: 13.405,   endLat: 41.9028, endLng: 12.4964,  arcAlt: 0.15, color: THEME_COLORS[1] },
-  { startLat: 41.9028, startLng: 12.4964,  endLat: 41.0082, endLng: 28.9784,  arcAlt: 0.1,  color: THEME_COLORS[2] },
+  {
+    startLat: 51.5072,
+    startLng: -0.1276,
+    endLat: 48.8566,
+    endLng: 2.3522,
+    arcAlt: 0.1,
+    color: THEME_COLORS[2],
+  },
+  {
+    startLat: 48.8566,
+    startLng: 2.3522,
+    endLat: 52.52,
+    endLng: 13.405,
+    arcAlt: 0.1,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 52.52,
+    startLng: 13.405,
+    endLat: 41.9028,
+    endLng: 12.4964,
+    arcAlt: 0.15,
+    color: THEME_COLORS[1],
+  },
+  {
+    startLat: 41.9028,
+    startLng: 12.4964,
+    endLat: 41.0082,
+    endLng: 28.9784,
+    arcAlt: 0.1,
+    color: THEME_COLORS[2],
+  },
   // North America
-  { startLat: 40.7128, startLng: -74.006,  endLat: 34.0522, endLng: -118.2437, arcAlt: 0.2, color: THEME_COLORS[0] },
-  { startLat: 34.0522, startLng: -118.2437, endLat: 37.7749, endLng: -122.4194, arcAlt: 0.1, color: THEME_COLORS[1] },
-  { startLat: 19.4326, startLng: -99.1332, endLat: 40.7128, endLng: -74.006,  arcAlt: 0.3,  color: THEME_COLORS[2] },
+  {
+    startLat: 40.7128,
+    startLng: -74.006,
+    endLat: 34.0522,
+    endLng: -118.2437,
+    arcAlt: 0.2,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 34.0522,
+    startLng: -118.2437,
+    endLat: 37.7749,
+    endLng: -122.4194,
+    arcAlt: 0.1,
+    color: THEME_COLORS[1],
+  },
+  {
+    startLat: 19.4326,
+    startLng: -99.1332,
+    endLat: 40.7128,
+    endLng: -74.006,
+    arcAlt: 0.3,
+    color: THEME_COLORS[2],
+  },
   // Africa / Middle East
-  { startLat: -1.2921, startLng: 36.8219,  endLat: 30.0444, endLng: 31.2357,  arcAlt: 0.25, color: THEME_COLORS[0] },
-  { startLat: 30.0444, startLng: 31.2357,  endLat: 41.0082, endLng: 28.9784,  arcAlt: 0.2,  color: THEME_COLORS[1] },
+  {
+    startLat: -1.2921,
+    startLng: 36.8219,
+    endLat: 30.0444,
+    endLng: 31.2357,
+    arcAlt: 0.25,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 30.0444,
+    startLng: 31.2357,
+    endLat: 41.0082,
+    endLng: 28.9784,
+    arcAlt: 0.2,
+    color: THEME_COLORS[1],
+  },
   // South America
-  { startLat: -23.5505, startLng: -46.6333, endLat: -34.6037, endLng: -58.3816, arcAlt: 0.15, color: THEME_COLORS[2] },
-  { startLat: -34.6037, startLng: -58.3816, endLat: -22.9068, endLng: -43.1729, arcAlt: 0.1,  color: THEME_COLORS[0] },
+  {
+    startLat: -23.5505,
+    startLng: -46.6333,
+    endLat: -34.6037,
+    endLng: -58.3816,
+    arcAlt: 0.15,
+    color: THEME_COLORS[2],
+  },
+  {
+    startLat: -34.6037,
+    startLng: -58.3816,
+    endLat: -22.9068,
+    endLng: -43.1729,
+    arcAlt: 0.1,
+    color: THEME_COLORS[0],
+  },
   // Oceania
-  { startLat: -33.8688, startLng: 151.2093, endLat: 1.3521,   endLng: 103.8198, arcAlt: 0.4,  color: THEME_COLORS[1] },
+  {
+    startLat: -33.8688,
+    startLng: 151.2093,
+    endLat: 1.3521,
+    endLng: 103.8198,
+    arcAlt: 0.4,
+    color: THEME_COLORS[1],
+  },
   // Intercontinental
-  { startLat: 51.5072, startLng: -0.1276,  endLat: 40.7128,  endLng: -74.006,  arcAlt: 0.25, color: THEME_COLORS[2] },
-  { startLat: 55.7558, startLng: 37.6173,  endLat: 39.9042,  endLng: 116.4074, arcAlt: 0.35, color: THEME_COLORS[0] },
-  { startLat: 28.6139, startLng: 77.209,   endLat: 51.5072,  endLng: -0.1276,  arcAlt: 0.4,  color: THEME_COLORS[1] },
-  { startLat: 34.0522, startLng: -118.2437, endLat: 35.6762, endLng: 139.6503, arcAlt: 0.45, color: THEME_COLORS[2] },
+  {
+    startLat: 51.5072,
+    startLng: -0.1276,
+    endLat: 40.7128,
+    endLng: -74.006,
+    arcAlt: 0.25,
+    color: THEME_COLORS[2],
+  },
+  {
+    startLat: 55.7558,
+    startLng: 37.6173,
+    endLat: 39.9042,
+    endLng: 116.4074,
+    arcAlt: 0.35,
+    color: THEME_COLORS[0],
+  },
+  {
+    startLat: 28.6139,
+    startLng: 77.209,
+    endLat: 51.5072,
+    endLng: -0.1276,
+    arcAlt: 0.4,
+    color: THEME_COLORS[1],
+  },
+  {
+    startLat: 34.0522,
+    startLng: -118.2437,
+    endLat: 35.6762,
+    endLng: 139.6503,
+    arcAlt: 0.45,
+    color: THEME_COLORS[2],
+  },
 ];
 
 export default function GlobeSection({ className }) {
@@ -91,12 +259,8 @@ export default function GlobeSection({ className }) {
 
       // ── Globe ──────────────────────────────────────────────────────────────
       globe = new ThreeGlobe({ waitForGlobeReady: true, animateIn: true })
-        .globeImageUrl(
-          "/earth-blue-marble.webp"
-        )
-        .bumpImageUrl(
-          "/earth-topology.webp"
-        )
+        .globeImageUrl("/earth-blue-marble.webp")
+        .bumpImageUrl("/earth-topology.webp")
         .showAtmosphere(true)
         .atmosphereColor("#f0883e")
         .atmosphereAltitude(0.14)
@@ -177,11 +341,5 @@ export default function GlobeSection({ className }) {
     };
   }, []);
 
-  return (
-    <div
-      ref={mountRef}
-      className={className}
-      style={{ pointerEvents: "auto" }}
-    />
-  );
+  return <div ref={mountRef} className={className} style={{ pointerEvents: "auto" }} />;
 }

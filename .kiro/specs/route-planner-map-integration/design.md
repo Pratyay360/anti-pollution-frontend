@@ -54,15 +54,16 @@ Owns all form state and orchestrates the geocode → fetch → display flow.
 
 Key state additions / clarifications:
 
-| State var | Type | Purpose |
-|---|---|---|
-| `routes` | `Route[] \| null` | Returned from RouteAPI; passed to MapModal |
-| `mapCoords` | `{ lat, lng } \| null` | Origin coords; used to center the map |
-| `showMap` | `boolean` | Controls MapModal visibility |
-| `error` | `string \| null` | Inline error message |
-| `isSearching` | `boolean` | Loading state; disables submit button |
+| State var     | Type                   | Purpose                                    |
+| ------------- | ---------------------- | ------------------------------------------ |
+| `routes`      | `Route[] \| null`      | Returned from RouteAPI; passed to MapModal |
+| `mapCoords`   | `{ lat, lng } \| null` | Origin coords; used to center the map      |
+| `showMap`     | `boolean`              | Controls MapModal visibility               |
+| `error`       | `string \| null`       | Inline error message                       |
+| `isSearching` | `boolean`              | Loading state; disables submit button      |
 
 `handleFindRoute` flow:
+
 1. Resolve origin: use `geoCoords.current` if `startingPoint === 'My current location'`, else call `geocodeAddress(startingPoint)`.
 2. Call `geocodeAddress(destination)`.
 3. Call `fetchRoutesData({ originLat, originLng, destLat, destLng })`.
@@ -123,7 +124,7 @@ Initialises OlaMaps SDK, draws polylines for each route, adds start/end markers,
 
 ```ts
 interface Route {
-  routeId: string;           // unique identifier, used as map layer/source id
+  routeId: string; // unique identifier, used as map layer/source id
   polyline: [number, number][]; // array of [lng, lat] pairs
 }
 ```
@@ -165,28 +166,27 @@ interface RouteAPIPayload {
 }
 ```
 
-
 ---
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Pipeline failure sets error state
 
-*For any* failure thrown during `handleFindRoute` (whether from `geocodeAddress` for origin, `geocodeAddress` for destination, or `fetchRoutesData`), the component's `error` state SHALL be set to a non-empty string and `result` SHALL remain `null`.
+_For any_ failure thrown during `handleFindRoute` (whether from `geocodeAddress` for origin, `geocodeAddress` for destination, or `fetchRoutesData`), the component's `error` state SHALL be set to a non-empty string and `result` SHALL remain `null`.
 
 **Validates: Requirements 1.2, 2.4**
 
 ### Property 2: Successful fetch stores routes and transitions to success
 
-*For any* valid `Route[]` returned by `fetchRoutesData`, after `handleFindRoute` completes the component's `routes` state SHALL equal the returned array and `result` SHALL equal `'success'`.
+_For any_ valid `Route[]` returned by `fetchRoutesData`, after `handleFindRoute` completes the component's `routes` state SHALL equal the returned array and `result` SHALL equal `'success'`.
 
 **Validates: Requirements 2.3**
 
 ### Property 3: Route API payload matches resolved coordinates
 
-*For any* origin `{ lat, lng }` and destination `{ lat, lng }` resolved by the geocoder, `fetchRoutesData` SHALL be called with exactly `{ originLat: origin.lat, originLng: origin.lng, destLat: dest.lat, destLng: dest.lng }`.
+_For any_ origin `{ lat, lng }` and destination `{ lat, lng }` resolved by the geocoder, `fetchRoutesData` SHALL be called with exactly `{ originLat: origin.lat, originLng: origin.lng, destLat: dest.lat, destLng: dest.lng }`.
 
 **Validates: Requirements 2.1**
 
@@ -194,13 +194,13 @@ interface RouteAPIPayload {
 
 ## Error Handling
 
-| Failure point | Trigger | User-visible effect |
-|---|---|---|
-| Geocode origin fails | OlaMaps returns no results or non-OK status | Inline error banner with message from thrown Error |
-| Geocode destination fails | Same as above | Same |
-| RouteAPI non-OK response | `response.ok === false` | Inline error banner: `"API error: <status> <statusText>"` |
-| RouteAPI network error | `fetch` rejects | Inline error banner with caught error message |
-| Geolocation unavailable | `navigator.geolocation` absent or denied | Starting point field set to `"Location unavailable"` |
+| Failure point             | Trigger                                     | User-visible effect                                       |
+| ------------------------- | ------------------------------------------- | --------------------------------------------------------- |
+| Geocode origin fails      | OlaMaps returns no results or non-OK status | Inline error banner with message from thrown Error        |
+| Geocode destination fails | Same as above                               | Same                                                      |
+| RouteAPI non-OK response  | `response.ok === false`                     | Inline error banner: `"API error: <status> <statusText>"` |
+| RouteAPI network error    | `fetch` rejects                             | Inline error banner with caught error message             |
+| Geolocation unavailable   | `navigator.geolocation` absent or denied    | Starting point field set to `"Location unavailable"`      |
 
 All errors are caught in the single `try/catch` block inside `handleFindRoute`. The `finally` block always clears `isSearching`. The error state is cleared on each new submission attempt.
 
