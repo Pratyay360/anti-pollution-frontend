@@ -9,7 +9,7 @@ import HeroSection from './components/sections/HeroSection'
 import RoutePlannerSection from './components/sections/RoutePlannerSection'
 import FeatureSection from './components/sections/FeatureSection'
 import FeaturesGridSection from './components/sections/FeaturesGridSection'
-import FooterSection from './components/sections/FooterSection'
+import FooterSection from './components/Footer/FooterSection.jsx'
 import FloatingParticles from "./components/FloatingParticles.jsx"
 
 // Map page imports
