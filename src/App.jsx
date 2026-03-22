@@ -82,6 +82,7 @@ function HomePage() {
     <div ref={mainRef} className="relative min-h-screen">
       <div className="grain-overlay" />
       <FloatingParticles />
+      <Navigation />
       <main className="relative">
         <HeroSection />
         <RoutePlannerSection />
