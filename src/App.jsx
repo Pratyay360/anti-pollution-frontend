@@ -78,7 +78,6 @@ function HomePage() {
     <div ref={mainRef} className="relative min-h-screen">
       <div className="grain-overlay" />
       <FloatingParticles />
-      <Navigation />
       <main className="relative">
         <HeroSection />
         <RoutePlannerSection />
@@ -196,10 +195,9 @@ function MapPage() {
   }
 
   return (
-    <>
-      <Header />
+    <div className="w-full h-screen bg-[#111]">
       <MapView latitude={latitude} longitude={longitude} routes={routes} />
-    </>
+    </div>
   );
 }
 
@@ -240,6 +238,7 @@ function TestPage() {
 function App() {
   return (
     <Router>
+      <Navigation />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/map" element={<MapPage />} />
