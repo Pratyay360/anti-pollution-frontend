@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Menu, X, Moon, Sun, Wind } from 'lucide-react'
+import { Menu, X, Wind } from 'lucide-react'
 
-export default function Navigation({ isDarkMode, setIsDarkMode }) {
+export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
@@ -44,128 +44,87 @@ export default function Navigation({ isDarkMode, setIsDarkMode }) {
 
   return (
     <>
-      <nav 
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-          isScrolled 
-            ? 'bg-white/80 dark:bg-[#0A1620]/80 backdrop-blur-lg shadow-sm' 
+      <nav
+        className={`fixed top-0 left-0 right-0 z-100 transition-all duration-300 ${
+          isScrolled
+            ? 'backdrop-blur-md'
             : 'bg-transparent'
         }`}
+        style={isScrolled ? { background: 'rgba(13,17,23,0.85)', borderBottom: '1px solid var(--breathe-border)' } : {}}
       >
         <div className="w-full px-6 lg:px-12">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="flex items-center gap-2 group"
-              onClick={(e) => {
-                e.preventDefault()
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }}
+              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
             >
-              <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full breathe-gradient flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Wind className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
+              <div className="w-7 h-7 rounded flex items-center justify-center" style={{ background: 'var(--breathe-accent)' }}>
+                <Wind className="w-4 h-4" style={{ color: '#0d1117' }} />
               </div>
-              <span className="font-heading font-bold text-lg lg:text-xl text-breathe-text-primary">
+              <span className="font-heading font-bold text-base text-breathe-text-primary">
                 Breathe Easy
               </span>
             </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
+            {/* Desktop nav */}
+            <div className="hidden lg:flex items-center gap-6">
               {navLinks.map((link) => (
                 <button
                   key={link.label}
                   onClick={() => scrollToSection(link.href)}
-                  className="relative text-sm font-medium transition-colors duration-300 pb-0.5"
+                  className="text-sm transition-colors duration-200"
                   style={{ color: activeSection === link.href ? 'var(--breathe-accent)' : 'var(--breathe-text-secondary)' }}
                 >
                   {link.label}
-                  {activeSection === link.href && (
-                    <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 rounded-full breathe-gradient" />
-                  )}
                 </button>
               ))}
             </div>
 
-            {/* Right side actions */}
-            <div className="flex items-center gap-3 lg:gap-4">
-              {/* Dark mode toggle */}
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-breathe-border/30 transition-colors duration-300"
-                aria-label="Toggle dark mode"
-              >
-                {isDarkMode ? (
-                  <Sun className="w-5 h-5 text-breathe-accent" />
-                ) : (
-                  <Moon className="w-5 h-5 text-breathe-text-secondary" />
-                )}
-              </button>
-
-              {/* CTA Button - Desktop */}
+            {/* Right actions */}
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' })}
-                className="hidden lg:block breathe-button px-6 py-2.5 text-sm font-medium"
+                className="hidden lg:block breathe-button px-4 py-1.5 text-sm"
               >
                 Plan a route
               </button>
-
-              {/* Mobile menu button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center hover:bg-breathe-border/30 transition-colors duration-300"
+                className="lg:hidden w-9 h-9 rounded flex items-center justify-center transition-colors duration-200 hover:bg-breathe-border/30"
                 aria-label="Toggle menu"
               >
-                {isMobileMenuOpen ? (
-                  <X className="w-5 h-5 text-breathe-text-primary" />
-                ) : (
-                  <Menu className="w-5 h-5 text-breathe-text-primary" />
-                )}
+                {isMobileMenuOpen
+                  ? <X className="w-4 h-4 text-breathe-text-primary" />
+                  : <Menu className="w-4 h-4 text-breathe-text-primary" />
+                }
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
-      <div 
-        className={`fixed inset-0 z-[99] lg:hidden transition-all duration-500 ${
-          isMobileMenuOpen 
-            ? 'opacity-100 pointer-events-auto' 
-            : 'opacity-0 pointer-events-none'
+      {/* Mobile menu */}
+      <div
+        className={`fixed inset-0 z-99 lg:hidden transition-all duration-300 ${
+          isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
+        style={{ background: 'rgba(13,17,23,0.97)', backdropFilter: 'blur(12px)' }}
       >
-        <div 
-          className="absolute inset-0 bg-breathe-bg-primary/95 dark:bg-[#0A1620]/95 backdrop-blur-xl"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-        <div className="relative h-full flex flex-col items-center justify-center gap-8">
-          {navLinks.map((link, index) => (
+        <div className="h-full flex flex-col items-center justify-center gap-6" onClick={() => setIsMobileMenuOpen(false)}>
+          {navLinks.map((link) => (
             <button
               key={link.label}
               onClick={() => scrollToSection(link.href)}
-              className="text-2xl font-heading font-semibold text-breathe-text-primary hover:text-breathe-accent transition-colors duration-300"
-              style={{ 
-                animationDelay: `${index * 100}ms`,
-                opacity: isMobileMenuOpen ? 1 : 0,
-                transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-                transition: `all 0.5s ease ${index * 100}ms`
-              }}
+              className="text-xl font-heading font-semibold text-breathe-text-primary hover:text-breathe-accent transition-colors duration-200"
             >
               {link.label}
             </button>
           ))}
-          <button 
-            className="mt-4 breathe-button px-8 py-3 text-lg font-medium"
-            onClick={() => {
-              document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' })
-              setIsMobileMenuOpen(false)
-            }}
-            style={{ 
-              opacity: isMobileMenuOpen ? 1 : 0,
-              transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-              transition: `all 0.5s ease ${navLinks.length * 100}ms`
-            }}
+          <button
+            className="mt-4 breathe-button px-8 py-3 text-base font-semibold"
+            onClick={() => { document.querySelector('#route-planner')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false) }}
           >
             Plan a route
           </button>

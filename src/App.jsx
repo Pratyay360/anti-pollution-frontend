@@ -24,21 +24,12 @@ import './App.css'
 gsap.registerPlugin(ScrollTrigger)
 
 function HomePage() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const mainRef = useRef(null)
 
   useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setIsDarkMode(prefersDark)
+    // Always dark
+    document.documentElement.classList.add('dark')
   }, [])
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [isDarkMode])
 
   useEffect(() => {
     const setupGlobalSnap = () => {
@@ -86,10 +77,7 @@ function HomePage() {
     <div ref={mainRef} className="relative min-h-screen">
       <div className="grain-overlay" />
       <FloatingParticles />
-      <Navigation
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-      />
+      <Navigation />
       <main className="relative">
         <HeroSection />
         <RoutePlannerSection />

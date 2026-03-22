@@ -9,9 +9,9 @@ import MapModal from '../MapView/MapModal'
 gsap.registerPlugin(ScrollTrigger)
 
 const FEATURE_PILLS = [
-  { id: 'air',       icon: Wind,       label: 'Air quality',  color: '#2DB4D7', bg: 'rgba(45,180,215,0.10)',  activeBg: 'rgba(45,180,215,0.18)'  },
-  { id: 'elevation', icon: TrendingUp, label: 'Elevation',    color: '#5BA4CF', bg: 'rgba(91,164,207,0.10)',  activeBg: 'rgba(91,164,207,0.18)'  },
-  { id: 'quiet',     icon: VolumeX,    label: 'Quiet streets',color: '#3ECFB2', bg: 'rgba(62,207,178,0.10)',  activeBg: 'rgba(62,207,178,0.18)'  },
+  { id: 'air',       icon: Wind,       label: 'Air quality',  color: '#f0883e', bg: 'rgba(240,136,62,0.08)',  activeBg: 'rgba(240,136,62,0.16)'  },
+  { id: 'elevation', icon: TrendingUp, label: 'Elevation',    color: '#58a6ff', bg: 'rgba(88,166,255,0.08)',  activeBg: 'rgba(88,166,255,0.16)'  },
+  { id: 'quiet',     icon: VolumeX,    label: 'Quiet streets',color: '#3fb950', bg: 'rgba(63,185,80,0.08)',   activeBg: 'rgba(63,185,80,0.16)'   },
 ]
 
 export default function RoutePlannerSection() {
@@ -22,7 +22,7 @@ export default function RoutePlannerSection() {
   const inputBRef   = useRef(null)
   const buttonRef   = useRef(null)
   const pillsRef    = useRef(null)
-  const blob1Ref    = useRef(null)
+  const blob1Ref    = useRef(null)                          
   const blob2Ref    = useRef(null)
 
   const [startingPoint, setStartingPoint]   = useState('')
@@ -35,7 +35,6 @@ export default function RoutePlannerSection() {
   const [routes,        setRoutes]          = useState(null)
   const [mapCoords,     setMapCoords]       = useState(null)   // { lat, lng }
   const [showMap,       setShowMap]         = useState(false)
-  // Store raw geolocation coords when user clicks "Locate"
   const geoCoords = useRef(null)
 
   useEffect(() => {
@@ -170,11 +169,11 @@ export default function RoutePlannerSection() {
 
       <div
         ref={cardRef}
-        className="relative w-[min(90vw,680px)] breathe-card overflow-hidden"
+        className="relative w-[min(90vw,640px)] breathe-card overflow-hidden"
         style={{ padding: 0 }}
       >
         {/* Top accent bar */}
-        <div className="w-full h-1.5 breathe-gradient" style={{ borderRadius: '28px 28px 0 0' }} />
+        <div className="w-full h-0.5" style={{ background: 'var(--breathe-accent)', borderRadius: '8px 8px 0 0' }} />
 
         <div className="px-8 pt-7 pb-8 lg:px-10 lg:pt-8 lg:pb-10">
 
@@ -214,11 +213,11 @@ export default function RoutePlannerSection() {
           ) : (
             <>
               {/* Header */}
-              <div ref={titleRef} className="mb-6">
-                <p className="text-xs font-semibold tracking-widest uppercase mb-1.5" style={{ color: 'var(--breathe-accent)' }}>
+              <div ref={titleRef} className="mb-5">
+                <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: 'var(--breathe-accent)' }}>
                   Route Planner
                 </p>
-                <h2 className="font-heading font-bold text-breathe-text-primary leading-tight" style={{ fontSize: 'clamp(20px, 2.4vw, 30px)' }}>
+                <h2 className="font-heading font-bold text-breathe-text-primary leading-tight" style={{ fontSize: 'clamp(18px, 2.2vw, 26px)' }}>
                   Plan a low-pollution route
                 </h2>
               </div>
@@ -227,7 +226,7 @@ export default function RoutePlannerSection() {
               <div className="space-y-2 mb-5">
                 {/* From */}
                 <div ref={inputARef} className="relative">
-                  <div className="absolute left-5 top-1/2 -translate-y-1/2" style={{ color: 'var(--breathe-accent)' }}>
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--breathe-accent)' }}>
                     <MapPin className="w-4 h-4" />
                   </div>
                   <input
@@ -235,16 +234,16 @@ export default function RoutePlannerSection() {
                     placeholder="Starting point"
                     value={startingPoint}
                     onChange={(e) => setStartingPoint(e.target.value)}
-                    className="w-full pl-12 pr-24 breathe-input text-breathe-text-primary placeholder:text-breathe-text-secondary/60 text-sm"
-                    style={{ height: '52px' }}
+                    className="w-full pl-11 pr-24 breathe-input text-breathe-text-primary placeholder:text-breathe-text-secondary/60 text-sm"
+                    style={{ height: '46px' }}
                   />
                   {/* Use my location */}
                   <button
                     onClick={handleUseLocation}
                     disabled={locating}
                     title="Use my location"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:opacity-80 disabled:opacity-50"
-                    style={{ background: 'rgba(45,180,215,0.10)', color: 'var(--breathe-accent)' }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all duration-200 hover:opacity-80 disabled:opacity-50"
+                    style={{ background: 'rgba(240,136,62,0.12)', color: 'var(--breathe-accent)', border: '1px solid rgba(240,136,62,0.25)' }}
                   >
                     <LocateFixed className={`w-3 h-3 ${locating ? 'animate-spin' : ''}`} />
                     <span className="hidden sm:inline">{locating ? 'Locating…' : 'Locate'}</span>
@@ -260,7 +259,7 @@ export default function RoutePlannerSection() {
 
                 {/* To */}
                 <div ref={inputBRef} className="relative">
-                  <div className="absolute left-5 top-1/2 -translate-y-1/2" style={{ color: '#5BA4CF' }}>
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#58a6ff' }}>
                     <Flag className="w-4 h-4" />
                   </div>
                   {destination && (
@@ -277,8 +276,8 @@ export default function RoutePlannerSection() {
                     placeholder="Destination"
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
-                    className="w-full pl-12 pr-10 breathe-input text-breathe-text-primary placeholder:text-breathe-text-secondary/60 text-sm"
-                    style={{ height: '52px' }}
+                    className="w-full pl-11 pr-10 breathe-input text-breathe-text-primary placeholder:text-breathe-text-secondary/60 text-sm"
+                    style={{ height: '46px' }}
                   />
                 </div>
               </div>
@@ -289,7 +288,7 @@ export default function RoutePlannerSection() {
                 onClick={handleFindRoute}
                 disabled={isSearching || !startingPoint || !destination}
                 className="w-full breathe-button flex items-center justify-center gap-2 text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:transform-none"
-                style={{ height: '52px' }}
+                style={{ height: '46px' }}
               >
                 {isSearching ? (
                   <>
@@ -323,11 +322,11 @@ export default function RoutePlannerSection() {
                       <button
                         key={id}
                         onClick={() => toggleFilter(id)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all duration-200 hover:scale-105 active:scale-95"
                         style={{
                           background: active ? activeBg : bg,
                           color,
-                          outline: active ? `1.5px solid ${color}` : '1.5px solid transparent',
+                          border: active ? `1px solid ${color}` : '1px solid transparent',
                         }}
                         aria-pressed={active}
                       >

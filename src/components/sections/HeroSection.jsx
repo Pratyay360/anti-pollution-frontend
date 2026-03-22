@@ -24,42 +24,18 @@ export default function HeroSection() {
     if (!section || !blob || !headline || !subheadline || !scrollHint) return
 
     const ctx = gsap.context(() => {
-      // Initial states
       gsap.set(blob, { scale: 0.85, opacity: 0 })
       gsap.set(headline, { y: 24, opacity: 0 })
       gsap.set(subheadline, { y: 16, opacity: 0 })
       gsap.set(scrollHint, { opacity: 0, y: 10 })
 
-      // Entrance animation timeline
       const entranceTl = gsap.timeline({ delay: 0.2 })
-
       entranceTl
-        .to(blob, {
-          scale: 1,
-          opacity: 1,
-          duration: 0.9,
-          ease: 'power2.out'
-        })
-        .to(headline, {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          ease: 'power2.out'
-        }, '-=0.5')
-        .to(subheadline, {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          ease: 'power2.out'
-        }, '-=0.4')
-        .to(scrollHint, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out'
-        }, '-=0.3')
+        .to(blob, { scale: 1, opacity: 1, duration: 0.9, ease: 'power2.out' })
+        .to(headline, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, '-=0.5')
+        .to(subheadline, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, '-=0.4')
+        .to(scrollHint, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3')
 
-      // Scroll-driven exit animation
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -67,17 +43,9 @@ export default function HeroSection() {
           end: '+=130%',
           pin: false,
           scrub: 0.5,
-          onLeaveBack: () => {
-            // Reset to visible when scrolling back to top
-            gsap.to(blob, { y: 0, scale: 1, opacity: 1, duration: 0.3 })
-            gsap.to(headline, { y: 0, opacity: 1, duration: 0.3 })
-            gsap.to(subheadline, { y: 0, opacity: 1, duration: 0.3 })
-            gsap.to(scrollHint, { opacity: 1, y: 0, duration: 0.3 })
-          }
         }
       })
 
-      // EXIT phase (70-100%)
       scrollTl
         .fromTo(blob,
           { y: 0, scale: 1, opacity: 1 },
@@ -95,11 +63,10 @@ export default function HeroSection() {
           0.7
         )
 
-      // Breathing circle animation
       if (breathingCircle) {
         gsap.to(breathingCircle, {
           scale: 1.2,
-          opacity: 0.4,
+          opacity: 0.5,
           duration: 4,
           ease: 'sine.inOut',
           repeat: -1,
@@ -118,35 +85,45 @@ export default function HeroSection() {
       className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
       style={{ backgroundColor: 'var(--breathe-bg-primary)' }}
     >
-      {/* Breathing circle behind blob */}
+      {/* Subtle dot-grid background */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: 'radial-gradient(circle, rgba(240,136,62,0.12) 1px, transparent 1px)',
+        backgroundSize: '32px 32px',
+        maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)'
+      }} />
+
+      {/* Outer glow ring */}
       <div
         ref={breathingCircleRef}
-        className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[1000px] max-h-[1000px] rounded-full pointer-events-none"
+        className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(45, 180, 215, 0.15) 0%, transparent 70%)',
-          opacity: 0.2
+          background: 'radial-gradient(circle, rgba(240,136,62,0.07) 0%, transparent 65%)',
+          opacity: 0.3
         }}
       />
 
-      {/* Main hero blob */}
+      {/* Main hero blob — orange accent glow */}
       <div
         ref={blobRef}
-        className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[62vw] h-[62vw] max-w-[880px] max-h-[880px] blob breathe-gradient"
-        style={{ opacity: 0.9 }}
+        className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[54vw] h-[54vw] max-w-[780px] max-h-[780px] blob"
+        style={{
+          background: 'radial-gradient(circle at 40% 40%, rgba(240,136,62,0.22) 0%, rgba(88,166,255,0.10) 50%, transparent 75%)',
+          opacity: 0.9
+        }}
       />
 
-      {/* Decorative floating blobs */}
-      <div 
-        className="absolute -left-[10vw] -top-[10vh] w-[30vw] h-[30vw] blob breathe-gradient opacity-20 animate-float-slow"
-        style={{ animationDelay: '0s' }}
+      {/* Decorative corner blobs */}
+      <div
+        className="absolute -left-[8vw] -top-[8vh] w-[28vw] h-[28vw] blob animate-float-slow"
+        style={{ background: 'radial-gradient(circle, rgba(240,136,62,0.12) 0%, transparent 70%)', animationDelay: '0s' }}
       />
-      <div 
-        className="absolute -right-[8vw] top-[20vh] w-[20vw] h-[20vw] blob breathe-gradient opacity-15 animate-float"
-        style={{ animationDelay: '2s' }}
+      <div
+        className="absolute -right-[6vw] top-[18vh] w-[18vw] h-[18vw] blob animate-float"
+        style={{ background: 'radial-gradient(circle, rgba(88,166,255,0.10) 0%, transparent 70%)', animationDelay: '2s' }}
       />
-      <div 
-        className="absolute left-[15vw] -bottom-[5vh] w-[25vw] h-[25vw] blob breathe-gradient opacity-10 animate-float-slow"
-        style={{ animationDelay: '4s' }}
+      <div
+        className="absolute left-[12vw] -bottom-[4vh] w-[22vw] h-[22vw] blob animate-float-slow"
+        style={{ background: 'radial-gradient(circle, rgba(63,185,80,0.08) 0%, transparent 70%)', animationDelay: '4s' }}
       />
 
       {/* Content */}
@@ -154,24 +131,24 @@ export default function HeroSection() {
         <h1
           ref={headlineRef}
           className="font-heading font-bold text-breathe-text-primary mb-6"
-          style={{ 
-            fontSize: 'clamp(36px, 5vw, 56px)',
+          style={{
+            fontSize: 'clamp(36px, 5vw, 60px)',
             lineHeight: 1.1,
-            textShadow: '0 2px 20px rgba(255, 255, 255, 0.5)'
           }}
         >
-          Breathe Better, Live Better.
+          Breathe Better,{' '}
+          <span style={{ color: 'var(--breathe-accent)' }}>Live Better.</span>
         </h1>
-        
+
         <p
           ref={subheadlineRef}
-          className="text-breathe-text-secondary max-w-[760px] mx-auto"
-          style={{ 
+          className="text-breathe-text-secondary max-w-[720px] mx-auto"
+          style={{
             fontSize: 'clamp(16px, 1.5vw, 20px)',
-            lineHeight: 1.6
+            lineHeight: 1.65
           }}
         >
-          A gentler way to get around—cleaner air, calmer streets, and guidance built for sensitive lungs.
+          A gentler way to get around — cleaner air, calmer streets, and guidance built for sensitive lungs.
         </p>
       </div>
 
@@ -182,8 +159,10 @@ export default function HeroSection() {
         className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group bg-transparent border-0 p-2"
         aria-label="Scroll to route planner"
       >
-        <span className="text-sm text-breathe-text-secondary group-hover:text-breathe-accent transition-colors duration-300">Scroll to plan your route</span>
-        <ChevronDown className="w-5 h-5 text-breathe-accent animate-bounce" />
+        <span className="text-sm transition-colors duration-300" style={{ color: 'var(--breathe-text-secondary)' }}>
+          Scroll to plan your route
+        </span>
+        <ChevronDown className="w-5 h-5 animate-bounce" style={{ color: 'var(--breathe-accent)' }} />
       </button>
     </section>
   )
