@@ -124,7 +124,6 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Globe — replaces the orange circle blob; blobRef keeps GSAP entrance + scroll animations */}
       <div
         ref={blobRef}
         className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[54vw] h-[54vw] max-w-195 max-h-195"
