@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -9,7 +9,7 @@ import HeroSection from './components/sections/HeroSection'
 import RoutePlannerSection from './components/sections/RoutePlannerSection'
 import FeatureSection from './components/sections/FeatureSection'
 import FeaturesGridSection from './components/sections/FeaturesGridSection'
-import FooterSection from './components/sections/FooterSection'
+import FooterSection from './components/Footer/FooterSection.jsx'
 import FloatingParticles from "./components/FloatingParticles.jsx"
 
 // Map page imports
@@ -18,27 +18,19 @@ import Header from './components/Header/Header';
 import MapView from './components/MapView/MapView';
 import { fetchRoutesData } from './api/routeApi';
 import mockPostData from './data/mockPostData.json';
+import { fetchLatLongByAddr } from './api/getLatLong';
 
 import './App.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 function HomePage() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const mainRef = useRef(null)
 
   useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setIsDarkMode(prefersDark)
+    // Always dark
+    document.documentElement.classList.add('dark')
   }, [])
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [isDarkMode])
 
   useEffect(() => {
     const setupGlobalSnap = () => {
@@ -86,10 +78,6 @@ function HomePage() {
     <div ref={mainRef} className="relative min-h-screen">
       <div className="grain-overlay" />
       <FloatingParticles />
-      <Navigation
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-      />
       <main className="relative">
         <HeroSection />
         <RoutePlannerSection />
@@ -141,6 +129,7 @@ function HomePage() {
 
 function MapPage() {
   const { latitude, longitude, loading: locationLoading, error: locationError } = useGeolocation();
+  const location = useLocation();
 
   const [routes, setRoutes] = useState([]);
   const [routesLoading, setRoutesLoading] = useState(true);
@@ -150,11 +139,22 @@ function MapPage() {
     const loadRoutes = async () => {
       try {
         setRoutesLoading(true);
-        // Using mockPostData for the POST request payload as requested
-        const data = await fetchRoutesData(mockPostData);
+        let postPayload = mockPostData;
+
+        if (location.state && location.state.originLat) {
+          postPayload = {
+            originLat: Number(location.state.originLat),
+            originLng: Number(location.state.originLng),
+            destLat: Number(location.state.destLat),
+            destLng: Number(location.state.destLng)
+          };
+        }
+
+        // Using dynamically constructed payload based on form input or mock data
+        const data = await fetchRoutesData(postPayload);
         // Assuming API might return the array directly or inside a `routes` property or `data` property
         const actualRoutes = Array.isArray(data) ? data : (data?.routes || data?.data || []);
-        console.log(actualRoutes);
+        console.log("Fetched routes:", actualRoutes);
         setRoutes(actualRoutes);
       } catch (err) {
         setRoutesError(err.message);
@@ -164,7 +164,7 @@ function MapPage() {
     };
 
     loadRoutes();
-  }, []);
+  }, [location.state]);
 
   if (locationError) {
     return (
@@ -184,27 +184,65 @@ function MapPage() {
 
   if (routesError) {
     return (
-      <div className="app-status">
-        <p>⚠️ API Error: {routesError}</p>
-        <p>Make sure the API is running on localhost:3300</p>
+      <div className="app-status" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', gap: '1rem', background: 'var(--breathe-bg-primary)', color: 'var(--breathe-text-primary)' }}>
+        <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ff4d4d' }}>⚠️ Route Planning Error</p>
+        <p style={{ fontSize: '1.1rem', maxWidth: '80%', textAlign: 'center' }}>{routesError}</p>
+        <a href="/" className="breathe-button" style={{ padding: '0.75rem 1.5rem', textDecoration: 'none', marginTop: '1rem', display: 'inline-block' }}>
+          Try Another Location
+        </a>
       </div>
     );
   }
 
   return (
-    <>
-      <Header />
+    <div className="w-full h-screen bg-[#111]">
       <MapView latitude={latitude} longitude={longitude} routes={routes} />
-    </>
+    </div>
+  );
+}
+
+function TestPage() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    console.log("jadajsdjasdjasjd");
+    const fetchData = async () => {
+      try {
+        const res = await fetchLatLongByAddr("Kolkata, West Bengal");
+        console.log(res.geocodingResults);
+        setData(res.geocodingResults);
+      } catch (err) {
+        console.error(err.message);
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div style={{ padding: '2rem', background: '#333', color: 'white', minHeight: '100vh' }}>
+      <h1>Test Route API Output</h1>
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {!data && !error ? <p>Loading data...</p> : null}
+      {data && (
+        <pre style={{ background: '#111', padding: '1rem', borderRadius: '8px', overflow: 'auto' }}>
+          {JSON.stringify(data, null, 2)}
+        </pre>
+      )}
+    </div>
   );
 }
 
 function App() {
   return (
     <Router>
+      <Navigation />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/map" element={<MapPage />} />
+        <Route path="/test" element={<TestPage />} />
       </Routes>
     </Router>
   )

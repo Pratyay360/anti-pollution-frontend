@@ -60,7 +60,7 @@ function App() {
 
   return (
     <>
-      <Header />
+
       <MapView latitude={latitude} longitude={longitude} routes={routes} />
     </>
   );
